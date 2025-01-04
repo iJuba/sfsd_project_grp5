@@ -5,8 +5,8 @@ This repository is designed to provide beginners with the fundamental concepts a
 
 ## projetc Overview
 
-   # 📋 Features
-# Student Management:
+   ## 📋 Features
+#### Student Management:
 1.Add students with details (name, birth year, class, grades, etc.).
 
 2.Search for a student using their unique registration number.
@@ -15,17 +15,17 @@ This repository is designed to provide beginners with the fundamental concepts a
 
 4.Logical deletion of students (mark as "deleted" without physical removal).
 
-5.Class Data Management:
+#### Class Data Management:
 
-  Extract and display students of a specific class, sorted by their weighted average in descending order.
+ . Extract and display students of a specific class, sorted by their weighted average in descending order.
   
-6.File Organization:
+#### File Organization:
 
-  Periodic reorganization to physically remove logically deleted records and optimize file storage.
+ . Periodic reorganization to physically remove logically deleted records and optimize file storage.
 
-7.Data Validation:
+#### Data Validation:
 
-  Ensure data consistency (e.g., birth years between 1990–2020, grades between 0–20).
+  . Ensure data consistency (e.g., birth years between 1990–2020, grades between 0–20).
 
   
   ## ⚙️ Technical Details
