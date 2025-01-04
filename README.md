@@ -57,13 +57,13 @@ Interactive menu for user-friendly navigation and functionality selection.
 
    ## MEMBERS
    
-   -[Ibaghouchene Juba]()
-   -[Maacha	Yacine]()
-   -[Messaoudi Abdelkrim]()
-   -[Benamaouche 	Sonia ]()
-   -[Aliouche	Lycia]()
-   -[Saiche	Oussama ]()
-   -[Zerguini	Maylis]()
+   -[Ibaghouchene Juba](aj.ibaghouchene@ensta.edu.dz )
+   -[Maacha	Yacine](ay.maacha@ensta.edu.dz )
+   -[Messaoudi Abdelkrim](Messaoud)
+   -[Benamaouche 	Sonia ](as.benamaouche@ensta.edu.dz )
+   -[Aliouche	Lycia](al.aliouche@ensta.edu.dz )
+   -[Saiche	Oussama ](ao.saiche@ensta.edu.dz)
+   -[Zerguini	Maylis](am.zerguini@ensta.edu.dz)
  
 
  
