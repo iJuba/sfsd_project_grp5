@@ -6,7 +6,7 @@ This repository is designed to provide beginners with the fundamental concepts a
 ## Projetc Overview
 
    ## 📋 Features
-#### Student Management:
+### Student Management:
 1.Add students with details (name, birth year, class, grades, etc.).
 
 2.Search for a student using their unique registration number.
@@ -15,15 +15,15 @@ This repository is designed to provide beginners with the fundamental concepts a
 
 4.Logical deletion of students (mark as "deleted" without physical removal).
 
-#### Class Data Management:
+### Class Data Management:
 
  . Extract and display students of a specific class, sorted by their weighted average in descending order.
   
-#### File Organization:
+### File Organization:
 
  . Periodic reorganization to physically remove logically deleted records and optimize file storage.
 
-#### Data Validation:
+### Data Validation:
 
   . Ensure data consistency (e.g., birth years between 1990–2020, grades between 0–20).
 
@@ -45,11 +45,11 @@ Interactive menu for user-friendly navigation and functionality selection.
    ## 📚 Resources
  - [Project support](https://drive.google.com/drive/folders/1kRH-65xjDRdSl-Rr6cN5cqEtJ49UBbEj)
 
- - [GTK3 documentations]([https://docs.python.org/3/library/stdtypes.html#textseq](https://docs.gtk.org/gtk3/))
- - [Student given file ]
+ - [GTK3 documentations](https://docs.gtk.org/gtk3/)
+ - Student given file 
 
    💻 Tools:
- - [CODE BLOCKS]([https://docs.python.org/3/](https://www.codeblocks.org/downloads/))
+ - [CODE BLOCKS](https://www.codeblocks.org/downloads/)
  
  - [GTK3 libary](https://www.gtk.org/docs/installations/windows/)
 
