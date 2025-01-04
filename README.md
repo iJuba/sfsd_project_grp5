@@ -5,8 +5,8 @@ This repository is designed to provide beginners with the fundamental concepts a
 
 ## projetc Overview
 
-   #📋 Features
-#Student Management:
+   # 📋 Features
+# Student Management:
 1.Add students with details (name, birth year, class, grades, etc.).
 2.Search for a student using their unique registration number.
 3.Update student information with automatic recalculation of weighted averages.
@@ -19,7 +19,7 @@ This repository is designed to provide beginners with the fundamental concepts a
   Ensure data consistency (e.g., birth years between 1990–2020, grades between 0–20).
 
   
-  #⚙️ Technical Details
+  ## ⚙️ Technical Details
 Data stored in a structured binary file with the following format:
   Registration number, name, birth year, class, grades, average, deletion indicator.
 Weighted averages are calculated using coefficients for four core modules:
