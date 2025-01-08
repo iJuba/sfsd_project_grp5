@@ -71,7 +71,7 @@ Interactive menu for user-friendly navigation and functionality selection.
 
    ## MEMBERS
    
-   -[Messaoudi Abdelkrim](Messaoud) :
+   -[Messaoudi Abdelkrim](aa.messaoudi@ensta.edu.dz) :
    
    -[Maacha	Yacine](ay.maacha@ensta.edu.dz ) :
    
