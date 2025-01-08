@@ -1,0 +1,13 @@
+Messaoudi Abdelkrim : Home Page , Réorganisation et suppression physique 
+
+Maacha Yacine : Extraction des données par classe , Home Page
+
+Ibaghouchene Juba : Home Page , presentation , github repo , gtk
+
+Benamaouche Sonia : Ajout des étudiants
+ 
+Aliouche Lycia  : Modification des informations
+
+Saiche Oussama : Suppression logique
+
+Zerguini Maylis : Recherche d’un étudiant
