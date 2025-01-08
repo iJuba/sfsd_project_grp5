@@ -704,7 +704,6 @@ void writeBinaryFile() {
     fseek(file, sizeof(Entete) + bloc_index * sizeof(Bloc), SEEK_SET);
     fwrite(&bloc, sizeof(Bloc), 1, file);
     entete.nb_blocs_utilises++;
-    entete.nb_blocs_utilises+= size;
 
     // Update the entete
     rewind(file);
