@@ -6,14 +6,39 @@ This repository is designed to provide beginners with the fundamental concepts a
 ## Projetc Overview
 
    ## 📋 Features
-### Student Management:
-1.Add students with details (name, birth year, class, grades, etc.).
 
+  ## ⚙️ Technical Details
+
+Data stored in a structured binary file with the following format:
+
+Registration number, name, birth year, class, grades, average, deletion indicator.
+
+Weighted averages are calculated using coefficients for four core modules:
+
+SFSD (4), POO (3), Analyse Mathématique (2), Algèbre Linéaire (5).
+
+Interactive menu for user-friendly navigation and functionality selection.
+
+
+   
+### Student Management: made by the following operations\functions  : 
+
+1.Add students with details (name, birth year, class, grades, etc.) 
+ 
 2.Search for a student using their unique registration number.
 
-3.Update student information with automatic recalculation of weighted averages.
+3.Update student information with automatic recalculation of weighted averages .
 
 4.Logical deletion of students (mark as "deleted" without physical removal).
+
+5. extrating a class of students and displaying them
+    
+6.physical delete of student records .
+
+7. keeping the order of the students (using regetration number) for more efficiancy in search and other operations
+   
+
+
 
 ### Class Data Management:
 
@@ -28,17 +53,6 @@ This repository is designed to provide beginners with the fundamental concepts a
   . Ensure data consistency (e.g., birth years between 1990–2020, grades between 0–20).
 
   
-  ## ⚙️ Technical Details
-
-Data stored in a structured binary file with the following format:
-
-  Registration number, name, birth year, class, grades, average, deletion indicator.
-
-Weighted averages are calculated using coefficients for four core modules:
-
-SFSD (4), POO (3), Analyse Mathématique (2), Algèbre Linéaire (5).
-
-Interactive menu for user-friendly navigation and functionality selection.
 
 
 
@@ -55,15 +69,15 @@ Interactive menu for user-friendly navigation and functionality selection.
 
 
 
-   ## MEMBERS
+   ## MEMBERS 
    
-   -[Ibaghouchene Juba](aj.ibaghouchene@ensta.edu.dz )
-   -[Maacha	Yacine](ay.maacha@ensta.edu.dz )
-   -[Messaoudi Abdelkrim](Messaoud)
-   -[Benamaouche 	Sonia ](as.benamaouche@ensta.edu.dz )
-   -[Aliouche	Lycia](al.aliouche@ensta.edu.dz )
-   -[Saiche	Oussama ](ao.saiche@ensta.edu.dz)
-   -[Zerguini	Maylis](am.zerguini@ensta.edu.dz)
+   -[Ibaghouchene Juba](aj.ibaghouchene@ensta.edu.dz ) : 
+   -[Maacha	Yacine](ay.maacha@ensta.edu.dz ) :
+   -[Messaoudi Abdelkrim](Messaoud) :
+   -[Benamaouche 	Sonia ](as.benamaouche@ensta.edu.dz ) :
+   -[Aliouche	Lycia](al.aliouche@ensta.edu.dz ) :
+   -[Saiche	Oussama ](ao.saiche@ensta.edu.dz) :
+   -[Zerguini	Maylis](am.zerguini@ensta.edu.dz) :
  
 
  
