@@ -358,46 +358,58 @@ int Reorganisation() {
     float T = 0.8f;
     FichierTOF *F = (FichierTOF *)malloc(sizeof(FichierTOF));
     F->fichier = fopen(nom_fichier, "rb");
-    if (F == NULL) {
-        printf("Erreur d'ouverture du ficher %s", nom_fichier);
-        return -9999;
+    if (F->fichier == NULL) {
+        printf("Erreur d'ouverture du fichier %s\n", nom_fichier);
+        return -1;
     }
-    lire_entete(F);/// la lecture de l'entete nous permet de positionné la tete de lecture/ecriture sur le premier bloc
+    lire_entete(F);
+
     FichierTOF *F1 = (FichierTOF *)malloc(sizeof(FichierTOF));
-    initialiser_fichier(F1);
+    F1->fichier = fopen("temp.bin", "wb");
+    if (F1->fichier == NULL) {
+        printf("Erreur d'ouverture du fichier temporaire\n");
+        fclose(F->fichier);
+        free(F);
+        return -1;
+    }
 
-    Bloc Buf, Buf1; /// Buf represente le buffer du fichier initial __ Buf1 represente le buffer du nouveau fichier reorganisé
-    int nb_enr = 0; /// pour calculer le nombre d'enregistrement dans le fichier
-    int nb_blc = 1; /// pour calculer le nombre de bloc dans le fichier
-    int j;          /// pour mettre le nombre d'enregistrement dans le bloc
-    int k;          /// indice pour parcourire un bloc d'enregistremment dans le fichier initial
-    int q = 0;      /// indice pour parcourire un bloc d'enregistremment dans le fichier reorganisé
+    F1->entete.nb_blocs_utilises = 0;
+    F1->entete.compteur_inserts = 0;
+    mettre_a_jour_entete(F1);
 
-    while (fread(&Buf, sizeof(Buf), 1, F->fichier) == 1) { /// lire bloc par bloc
+    Bloc Buf, Buf1;
+    int nb_enr = 0;
+    int nb_blc = 0;
+    int j;
+    int k;
+    int q = 0;
+
+    while (fread(&Buf, sizeof(Buf), 1, F->fichier) == 1) {
         j = Buf.nb_enregistrements;
         k = 0;
-        while (k < j) { /// tanque tous les enregistremment du bloc ne sont pas entierement lus
-            if (Buf.etudiants[k].supprime== 0) {
-                nb_enr++;
-                ///Remlissage des bloc du fichier reorganisé à (T*100)%
+        while (k < j) {
+            if (Buf.etudiants[k].supprime == 0) {
                 if (q < T * MAX_ENREGISTREMENTS) {
                     Buf1.etudiants[q] = Buf.etudiants[k];
                     q++;
                 } else {
                     Buf1.nb_enregistrements = q;
                     fwrite(&Buf1, sizeof(Bloc), 1, F1->fichier);
+                    nb_blc++;
                     Buf1.etudiants[0] = Buf.etudiants[k];
                     q = 1;
-                    nb_blc++;
                 }
+                nb_enr++;
             }
-            k++; /// passer au prochain enregistrement
+            k++;
+        }
+        if (q > 0) {
+            Buf1.nb_enregistrements = q;
+            fwrite(&Buf1, sizeof(Bloc), 1, F1->fichier);
+            nb_blc++;
+            q = 0;
         }
     }
-    /** A la fin de la boucle on doit écrire le dernier bloc
-     même si tous les enregistrements sont supprimés le fichier contiendrait un bloc vide */
-    Buf1.nb_enregistrements = q;
-    fwrite(&Buf1, sizeof(Bloc), 1, F1->fichier);
 
     F1->entete.compteur_inserts = nb_enr;
     F1->entete.nb_blocs_utilises = nb_blc;
@@ -407,13 +419,12 @@ int Reorganisation() {
     fclose(F1->fichier);
     free(F);
     free(F1);
-    /// Remplacer l'ancient fichier par le nouveau reorganisé
-    remove(nom_fichier); /// Supprimer l'ancien fichier binaire
-    rename("new_file.bin", nom_fichier); /// Renommer le nouveau fichier binaire
+
+    remove(nom_fichier);
+    rename("temp.bin", nom_fichier);
 
     return 0;
 }
-
 void extractByClass() {
     FILE *file = fopen(nom_fichier, "rb");
     if (!file) {
@@ -567,40 +578,67 @@ void modifier_etudiant() {
         printf("Aucun étudiant trouvé avec le numéro d'inscription %d.\n", numero_inscription);
     }
 }
+
 void suppression_logique() {
     int Trouv, i, j, numero_inscription;
     printf("enter student id:\n");
     scanf("%d", &numero_inscription);
-    /// Rechercher l'étudiant à supprimer
+
     recherche_dichotomique(numero_inscription, &Trouv, &i, &j);
 
     if (Trouv) {
-        /// Ouvrir le fichier en mode lecture/écriture binaire
         FILE *fichier = fopen(nom_fichier, "r+b");
         if (fichier == NULL) {
             printf("Erreur lors de l'ouverture du fichier\n");
             return;
         }
 
-        /// Se positionner sur le bloc contenant l'étudiant à supprimer
-        fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
-        Bloc buf;
-        fread(&buf, sizeof(Bloc), 1, fichier); /// Lire le bloc
+        // Verify block index i
+        if (i >= 1 ) {
+            // Check for fseek error
+            if (fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET) != 0) {
+                perror("fseek error");
+                fclose(fichier);
+                return;
+            }
 
-        /// Marquer l'étudiant comme supprimé
-        buf.etudiants[j - 1].supprime= 1; /// j est basé sur un indice 1
+            Bloc buf;
+            if (fread(&buf, sizeof(Bloc), 1, fichier) != 1) {
+                perror("fread error");
+                fclose(fichier);
+                return;
+            }
 
-        /// Réécrire le bloc modifié dans le fichier
-        fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
-        fwrite(&buf, sizeof(Bloc), 1, fichier);
+            // Check j
+            if (j >= 0 && j < buf.nb_enregistrements) {
+               buf.etudiants[j].supprime = 1;
+
+                // Seek back to the beginning of the block to rewrite
+                if (fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET) != 0) {
+                    perror("fseek error (rewriting)");
+                    fclose(fichier);
+                    return;
+                }
+
+                if (fwrite(&buf, sizeof(Bloc), 1, fichier) != 1) {
+                    perror("fwrite error");
+                    fclose(fichier);
+                    return;
+                }
+
+                printf("L'étudiant avec le numéro d'inscription %d a été marqué comme supprimé.\n", numero_inscription);
+            } else {
+                printf("Error: Invalid j value: %d\n", j);
+            }
+        } else {
+            printf("Error: Invalid block index i: %d\n", i);
+        }
 
         fclose(fichier);
-        printf("L'étudiant avec le numéro d'inscription %d a été marqué comme supprimé.\n", numero_inscription);
     } else {
         printf("Aucun étudiant trouvé avec le numéro d'inscription %d.\n", numero_inscription);
     }
 }
-
 
 void initializeBinaryFile() {
     FILE *file = fopen(nom_fichier, "wb");
