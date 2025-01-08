@@ -62,22 +62,29 @@ Interactive menu for user-friendly navigation and functionality selection.
  - [GTK3 documentations](https://docs.gtk.org/gtk3/)
  - Student given file 
 
-   💻 Tools:
+  ## 💻 Tools:
  - [CODE BLOCKS](https://www.codeblocks.org/downloads/)
  
  - [GTK3 libary](https://www.gtk.org/docs/installations/windows/)
 
 
 
-   ## MEMBERS 
+   ## MEMBERS
    
-   -[Ibaghouchene Juba](aj.ibaghouchene@ensta.edu.dz ) : 
-   -[Maacha	Yacine](ay.maacha@ensta.edu.dz ) :
    -[Messaoudi Abdelkrim](Messaoud) :
+   
+   -[Maacha	Yacine](ay.maacha@ensta.edu.dz ) :
+   
+   -[Ibaghouchene Juba](aj.ibaghouchene@ensta.edu.dz ) :
+   
    -[Benamaouche 	Sonia ](as.benamaouche@ensta.edu.dz ) :
+   
    -[Aliouche	Lycia](al.aliouche@ensta.edu.dz ) :
+   
    -[Saiche	Oussama ](ao.saiche@ensta.edu.dz) :
+   
    -[Zerguini	Maylis](am.zerguini@ensta.edu.dz) :
+   
  
 
  
