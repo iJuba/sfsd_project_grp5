@@ -8,8 +8,8 @@
 #define MAX_STUDENTS_PER_BLOC 10
 #define MAX_BLOCS 10
 #define MAX_FILTERED_STUDENTS 100
-#define MAX_ENREGISTREMENTS 10  
-#define MAX_LINE_LENGTH 256    
+#define MAX_ENREGISTREMENTS 10
+#define MAX_LINE_LENGTH 256
 
 const char *nom_fichier = "students.bin";
 
@@ -28,12 +28,12 @@ typedef struct {
 
 // Function declarations
 void ajouter_etudiant();
-void afficher_contenu_fichier_binaire(); 
-void recherche_dichotomique(int numero_inscription, int *Trouv, int *i, int *j); 
-int find(); 
+void afficher_contenu_fichier_binaire();
+void recherche_dichotomique(int numero_inscription, int *Trouv, int *i, int *j);
+int find();
 void calculer_moyenne(Etudiant *etudiant);
 void extractByClass();
-void modifier_etudiant(); 
+void modifier_etudiant();
 
 typedef struct {
     Etudiant etudiants[MAX_ENREGISTREMENTS]; /// Tableau d'étudiants
@@ -66,7 +66,7 @@ void mettre_a_jour_entete(FichierTOF *f) {
 
 /// Fonction pour initialiser le fichier TOF
 void initialiser_fichier(FichierTOF *f) {
-    f->fichier = fopen(nom_fichier, "wb"); 
+    f->fichier = fopen(nom_fichier, "wb");
     if (f->fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier");
         exit(-1);
@@ -92,45 +92,42 @@ void calculer_moyenne(Etudiant *e){
 }
 
 /// Cette fonction nous permet de visualiser le contenue du fichier binaire
-void afficher_contenu_fichier_binaire() {
-    FILE *fichier = fopen(nom_fichier, "rb");///ouverture en mode lecture binaire
+void afficher_contenu_fichier_binaire(GtkListStore *list_store) {
+    FILE *fichier = fopen(nom_fichier, "rb"); // Ouverture en mode lecture binaire
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier\n");
         return;
     }
 
-    Entete entete;///Affichage de l'entete
-    fread(&entete, sizeof(Entete), 1, fichier);
-    printf("Nombre de blocs utilisés: %d\n", entete.nb_blocs_utilises);
-    printf("Compteur d'inserts: %d\n", entete.compteur_inserts);
+    // Vider le GtkListStore avant de le remplir
+    gtk_list_store_clear(list_store);
 
-    Bloc bloc;///Affichage des enregistrement Bloc par Bloc
+    Entete entete;
+    fread(&entete, sizeof(Entete), 1, fichier); // Lire l'entête
+
+    Bloc bloc;
     for (int i = 0; i < entete.nb_blocs_utilises; i++) {
         fread(&bloc, sizeof(Bloc), 1, fichier);
-        printf("Bloc %d:\n", i + 1);
         for (int j = 0; j < bloc.nb_enregistrements; j++) {
             Etudiant etudiant = bloc.etudiants[j];
-            printf("Numéro d'inscription: %d\n", etudiant.numero_inscription);
-            printf("Nom: %s\n", etudiant.nom);
-            printf("Prénom: %s\n", etudiant.prenom);
-            printf("Année de naissance: %d\n", etudiant.annee_naissance);
-            printf("classe: %s\n", etudiant.classe);
-            printf("Notes: \n");
-            for (int k = 0; k < 4; k++) {
-                printf("Module %d:%.2f ",k+1, etudiant.notes[k]);
-                printf("__Coefficients: %d \n", etudiant.coefficients[k]);
+            if (!etudiant.supprime) { // Ignorer les étudiants supprimés
+                GtkTreeIter iter;
+                gtk_list_store_append(list_store, &iter); // Ajouter une nouvelle ligne
+                gtk_list_store_set(list_store, &iter,
+                                   0, etudiant.numero_inscription,
+                                   1, etudiant.nom,
+                                   2, etudiant.prenom,
+                                   3, etudiant.annee_naissance,
+                                   4, etudiant.classe,
+                                   5, etudiant.moyenne,
+                                   -1);
             }
-            printf("Moyenne pondérée: %.2f\n", etudiant.moyenne);
-            printf("Indicateur de suppression: %d\n", etudiant.supprime);
-            printf("\n");
         }
-
     }
 
     fclose(fichier);
 }
 
-/// Fonction de recherche dichotomique conforme à la logique fournie
 void recherche_dichotomique(int numero_inscription, int *Trouv, int *i, int *j) {
     FILE *fichier = fopen(nom_fichier, "rb");
     if (fichier == NULL) {
@@ -152,7 +149,7 @@ void recherche_dichotomique(int numero_inscription, int *Trouv, int *i, int *j) 
     /// Recherche externe (entre les blocs)
     while (bi <= bs && !(*Trouv) && !stop) {
         *i = (bi + bs) / 2; /// Bloc du milieu
-        fseek(fichier, sizeof(Entete) + (*i - 1) * sizeof(Bloc), SEEK_SET); 
+        fseek(fichier, sizeof(Entete) + (*i - 1) * sizeof(Bloc), SEEK_SET);
         Bloc buf;
         fread(&buf, sizeof(Bloc), 1, fichier); /// Lire le bloc
 
@@ -309,7 +306,7 @@ void ajouter_etudiant() {
     }
 }
 
-int find(){ 
+int find(){
     /// Recherche dichotomique d'un étudiant par son numéro d'inscription
     int Trouv, i, j;
     int numero_inscription_recherche;
