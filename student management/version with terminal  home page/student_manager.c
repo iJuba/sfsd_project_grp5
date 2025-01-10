@@ -7,85 +7,85 @@
 
 /// Structure d'un enregistrement
 typedef struct {
-    int numero_inscription;     /// Numéro d'inscription de l'étudiant
-    char nom[50];               /// Nom de l'étudiant
-    char prenom[50];            /// Prénom de l'étudiant
-    int annee_naissance;        /// Année de naissance de l'étudiant
-    char groupe[10];            /// Groupe de l'étudiant
-    float notes[4];             /// Notes de l'étudiant
+    int numero_inscription;     /// Numï¿½ro d'inscription de l'ï¿½tudiant
+    char nom[50];               /// Nom de l'ï¿½tudiant
+    char prenom[50];            /// Prï¿½nom de l'ï¿½tudiant
+    int annee_naissance;        /// Annï¿½e de naissance de l'ï¿½tudiant
+    char groupe[10];            /// Groupe de l'ï¿½tudiant
+    float notes[4];             /// Notes de l'ï¿½tudiant
     int coefficients[4];        /// Coefficients des notes
-    float moyenne_ponderee;     /// Moyenne pondérée des notes
-    int indicateur_suppression; /// Indicateur de suppression (0 = actif, 1 = supprimé)
+    float moyenne_ponderee;     /// Moyenne pondï¿½rï¿½e des notes
+    int indicateur_suppression; /// Indicateur de suppression (0 = actif, 1 = supprimï¿½)
 } Etudiant;
 
 /// Structure d'un bloc
 typedef struct {
-    Etudiant etudiants[MAX_ENREGISTREMENTS]; /// Tableau d'étudiants
+    Etudiant etudiants[MAX_ENREGISTREMENTS]; /// Tableau d'ï¿½tudiants
     int nb_enregistrements;                  /// Nombre d'enregistrements dans ce bloc
 } Bloc;
 
-/// Structure de l'entête
+/// Structure de l'entï¿½te
 typedef struct {
-    int nb_blocs_utilises;    /// Nombre total de blocs utilisés
-    int compteur_inserts;     /// Nombre total d'enregistrements insérés
+    int nb_blocs_utilises;    /// Nombre total de blocs utilisï¿½s
+    int compteur_inserts;     /// Nombre total d'enregistrements insï¿½rï¿½s
 } Entete;
 
-/// Structure représentant le fichier TOF avec son entête
+/// Structure reprï¿½sentant le fichier TOF avec son entï¿½te
 typedef struct {
     FILE *fichier;   /// Pointeur vers le fichier
-    Entete entete;   /// Entête du fichier
+    Entete entete;   /// Entï¿½te du fichier
 } FichierTOF;
 
-/// Fonction pour lire l'entête du fichier
+/// Fonction pour lire l'entï¿½te du fichier
 void lire_entete(FichierTOF *f) {
-    rewind(f->fichier); /// Retour au début du fichier
-    fread(&(f->entete), sizeof(Entete), 1, f->fichier); /// Lecture de l'entête
+    rewind(f->fichier); /// Retour au dï¿½but du fichier
+    fread(&(f->entete), sizeof(Entete), 1, f->fichier); /// Lecture de l'entï¿½te
 }
 
-/// Fonction pour mettre à jour l'entête du fichier
+/// Fonction pour mettre ï¿½ jour l'entï¿½te du fichier
 void mettre_a_jour_entete(FichierTOF *f) {
-    rewind(f->fichier); /// Retour au début du fichier
-    fwrite(&(f->entete), sizeof(Entete), 1, f->fichier); /// Écriture de l'entête
+    rewind(f->fichier); /// Retour au dï¿½but du fichier
+    fwrite(&(f->entete), sizeof(Entete), 1, f->fichier); /// ï¿½criture de l'entï¿½te
 }
 
 /// Fonction pour initialiser le fichier TOF
 void initialiser_fichier(FichierTOF *f, const char *nom_fichier) {
-    f->fichier = fopen(nom_fichier, "wb"); /// Création et ouverture du fichier en mode écriture binaire
+    f->fichier = fopen(nom_fichier, "wb"); /// Crï¿½ation et ouverture du fichier en mode ï¿½criture binaire
     if (f->fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier");
         exit(-1);
     }
 
-    /// Initialiser l'entête
+    /// Initialiser l'entï¿½te
     f->entete.nb_blocs_utilises = 0;
     f->entete.compteur_inserts = 0;
 
-    /// Écrire l'entête dans le fichier
+    /// ï¿½crire l'entï¿½te dans le fichier
     fwrite(&(f->entete), sizeof(Entete), 1, f->fichier);
 }
 
-/** la fonction lire_ligne permet de recuperé les information contenue par une ligne
-et les rangé dans une strecture Etudiant définie au paravant */
+/** la fonction lire_ligne permet de recuperï¿½ les information contenue par une ligne
+et les rangï¿½ dans une strecture Etudiant dï¿½finie au paravant */
 int lire_ligne(char *ligne, Etudiant *etudiant) {
     char *info;
     int i;
 
-    /// Lire le numéro d'inscription
+    /// Lire le numï¿½ro d'inscription
     info = strtok(ligne, ";");
     etudiant->numero_inscription = atoi(info);
 
-    /** strtok divise la chaîne ligne en jetons séparés par des points-virgules (;)
-     La fonction atoi convertit une chaîne de caractères en un entier */
+    /** strtok divise la chaï¿½ne ligne en jetons sï¿½parï¿½s par des points-virgules (;)
+     La fonction atoi convertit une chaï¿½ne de caractï¿½res en un entier */
 
     /// Lire le nom et le prenom
     info = strtok(NULL, ";");
     sscanf(info, "%49s %49s", etudiant->nom, etudiant->prenom);
 
-    /** Chaque appel suivant à strtok avec NULL comme premier argument continue à diviser la chaîne initiale
-     La fonction sscanf lit des données formatées à partir d'une chaîne de caractères
-     le format uttilisé "%s %s" car le nom et le prenom sont séparé par un espace */
+    /** Chaque appel suivant ï¿½ strtok avec NULL comme premier argument continue ï¿½ diviser la chaï¿½ne initiale
+     La fonction sscanf lit des donnï¿½es formatï¿½es ï¿½ partir d'une chaï¿½ne de caractï¿½res
+     le format uttilisï¿½ "%s %s" car le nom et le prenom sont sï¿½parï¿½ par un espace */
 
-    /// Lire l'année de naissance
+    /// Lire l'annï¿½e de naissance
     info = strtok(NULL, ";");
     etudiant->annee_naissance = atoi(info);
 
@@ -93,17 +93,22 @@ int lire_ligne(char *ligne, Etudiant *etudiant) {
     info = strtok(NULL, ";");
     strcpy(etudiant->groupe, info);
 
-    /// Lire les notes et coefficients
+    /// Lire les notes
     for (i = 0; i < 4; i++) {
-        info = strtok(NULL, ";");
-        sscanf(info, "%f,%d", &etudiant->notes[i], &etudiant->coefficients[i]);
+    info = strtok(NULL, ";");
+        sscanf(info, "%f", &etudiant->notes[i]);
+    }
+    /// Initialiser les coefficients constants
+    int coefficients_fixes[4] = {4, 3, 2, 5};
+    for (i = 0; i < 4; i++) {
+        etudiant->coefficients[i] = coefficients_fixes[i];
     }
 
-    //// Lire la moyenne pondérée
+    //// Lire la moyenne pondï¿½rï¿½e
     info = strtok(NULL, ";");
     etudiant->moyenne_ponderee = atof(info);
 
-    /// La fonction atof convertit une chaîne de caractères en un nombre à virgule flottante (float)
+    /// La fonction atof convertit une chaï¿½ne de caractï¿½res en un nombre ï¿½ virgule flottante (float)
 
     /// Lire l'indicateur de suppression
     info = strtok(NULL, ";");
@@ -111,9 +116,9 @@ int lire_ligne(char *ligne, Etudiant *etudiant) {
     return 0;
 }
 
-/// Fonction pour charger initialement les données depuis un fichier texte vers un fichier binaire
+/// Fonction pour charger initialement les donnï¿½es depuis un fichier texte vers un fichier binaire
 int chargement_initial(const char *fichier_txt, const char *fichier_bin, float T) {
-    /// T est un réel compris entre 0 et 1 et désigne le taux de chargement voulu au départ
+    /// T est un rï¿½el compris entre 0 et 1 et dï¿½signe le taux de chargement voulu au dï¿½part
     FILE *F1;
     F1 = fopen(fichier_txt, "r");
     if (F1 == NULL) {
@@ -124,8 +129,8 @@ int chargement_initial(const char *fichier_txt, const char *fichier_bin, float T
     FichierTOF *F2 = (FichierTOF *)malloc(sizeof(FichierTOF));/// Allocation d'espace pour F2
     initialiser_fichier(F2, fichier_bin);
 
-    Etudiant etudiant;/// etudiant c'est le buffer utilisé pour remplire les bloc
-    Bloc Buf;/// Buf est le buffer utilisé pour ecrire sur /lire du fichier binaire
+    Etudiant etudiant;/// etudiant c'est le buffer utilisï¿½ pour remplire les bloc
+    Bloc Buf;/// Buf est le buffer utilisï¿½ pour ecrire sur /lire du fichier binaire
 
     int j = 0;  /// num d'enreg dans le bloc
     int i = 1;  /// pour calculer le nombre de bloc
@@ -153,11 +158,11 @@ int chargement_initial(const char *fichier_txt, const char *fichier_bin, float T
     mettre_a_jour_entete(F2);
     fclose(F1);
     fclose(F2->fichier);
-    free(F2);/// liberer l'espace deja alloué
+    free(F2);/// liberer l'espace deja allouï¿½
     return 0;
 }
 
-/// Fonction pour réorganiser le fichier binaire en supprimant les enregistrements marqués comme supprimés
+/// Fonction pour rï¿½organiser le fichier binaire en supprimant les enregistrements marquï¿½s comme supprimï¿½s
 int Reorganisation(const char *fichier_bin, float T) {
     FichierTOF *F = (FichierTOF *)malloc(sizeof(FichierTOF));
     F->fichier = fopen(fichier_bin, "rb");
@@ -165,16 +170,16 @@ int Reorganisation(const char *fichier_bin, float T) {
         printf("Erreur d'ouverture du ficher %s", fichier_bin);
         return -9999;
     }
-    lire_entete(F);/// la lecture de l'entete nous permet de positionné la tete de lecture/ecriture sur le premier bloc
+    lire_entete(F);/// la lecture de l'entete nous permet de positionnï¿½ la tete de lecture/ecriture sur le premier bloc
     FichierTOF *F1 = (FichierTOF *)malloc(sizeof(FichierTOF));
     initialiser_fichier(F1, "new_file.bin");
 
-    Bloc Buf, Buf1; /// Buf represente le buffer du fichier initial __ Buf1 represente le buffer du nouveau fichier reorganisé
+    Bloc Buf, Buf1; /// Buf represente le buffer du fichier initial __ Buf1 represente le buffer du nouveau fichier reorganisï¿½
     int nb_enr = 0; /// pour calculer le nombre d'enregistrement dans le fichier
     int nb_blc = 1; /// pour calculer le nombre de bloc dans le fichier
     int j;          /// pour mettre le nombre d'enregistrement dans le bloc
     int k;          /// indice pour parcourire un bloc d'enregistremment dans le fichier initial
-    int q = 0;      /// indice pour parcourire un bloc d'enregistremment dans le fichier reorganisé
+    int q = 0;      /// indice pour parcourire un bloc d'enregistremment dans le fichier reorganisï¿½
 
     while (fread(&Buf, sizeof(Buf), 1, F->fichier) == 1) { /// lire bloc par bloc
         j = Buf.nb_enregistrements;
@@ -182,7 +187,7 @@ int Reorganisation(const char *fichier_bin, float T) {
         while (k < j) { /// tanque tous les enregistremment du bloc ne sont pas entierement lus
             if (Buf.etudiants[k].indicateur_suppression == 0) {///verifier l'indicateur de supression pour savoir si l'etudiant est actif
                 nb_enr++;
-                ///Remlissage des bloc du fichier reorganisé à (T*100)%
+                ///Remlissage des bloc du fichier reorganisï¿½ ï¿½ (T*100)%
                 if (q < T * MAX_ENREGISTREMENTS) {
                     Buf1.etudiants[q] = Buf.etudiants[k];
                     q++;
@@ -197,8 +202,8 @@ int Reorganisation(const char *fichier_bin, float T) {
             k++; /// passer au prochain enregistrement
         }
     }
-    /** A la fin de la boucle on doit écrire le dernier bloc
-     même si tous les enregistrements sont supprimés le fichier contiendrait un bloc vide */
+    /** A la fin de la boucle on doit ï¿½crire le dernier bloc
+     mï¿½me si tous les enregistrements sont supprimï¿½s le fichier contiendrait un bloc vide */
     Buf1.nb_enregistrements = q;
     fwrite(&Buf1, sizeof(Bloc), 1, F1->fichier);
 
@@ -210,30 +215,32 @@ int Reorganisation(const char *fichier_bin, float T) {
     fclose(F1->fichier);
     free(F);
     free(F1);
-    /// Remplacer l'ancient fichier par le nouveau reorganisé
+    /// Remplacer l'ancient fichier par le nouveau reorganisï¿½
     remove(fichier_bin); /// Supprimer l'ancien fichier binaire
     rename("new_file.bin", fichier_bin); /// Renommer le nouveau fichier binaire
 
     return 0;
 }
 
-/// Fonction de recherche dichotomique conforme à la logique fournie
-int recherche_dichotomique(const char *fichier_bin, int numero_inscription, int *Trouv, int *i, int *j) {
+/// Fonction de recherche dichotomique conforme ï¿½ la logique fournie
+int recherche_dichotomique( int numero_inscription, int *Trouv, int *i, int *j) {
+    const char *fichier_bin = "etudiants.bin";
+
     FILE *fichier = fopen(fichier_bin, "rb");
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier\n");
         return -1;
     }
 
-    /// Lire l'entête pour connaître le nombre de blocs utilisés
+    /// Lire l'entï¿½te pour connaï¿½tre le nombre de blocs utilisï¿½s
     Entete entete;
     fread(&entete, sizeof(Entete), 1, fichier);
 
     /// Initialisation des variables
-    int bi = 1; /// Borne inférieure (premier bloc)
-    int bs = entete.nb_blocs_utilises; /// Borne supérieure (dernier bloc)
-    *Trouv = 0; /// Indicateur de trouvé (faux par défaut)
-    int stop = 0; /// Indicateur d'arrêt
+    int bi = 1; /// Borne infï¿½rieure (premier bloc)
+    int bs = entete.nb_blocs_utilises; /// Borne supï¿½rieure (dernier bloc)
+    *Trouv = 0; /// Indicateur de trouvï¿½ (faux par dï¿½faut)
+    int stop = 0; /// Indicateur d'arrï¿½t
     *j = 1; /// Position initiale dans le bloc
 
     /// Recherche externe (entre les blocs)
@@ -243,74 +250,74 @@ int recherche_dichotomique(const char *fichier_bin, int numero_inscription, int 
         Bloc buf;
         fread(&buf, sizeof(Bloc), 1, fichier); /// Lire le bloc
 
-        /// Vérifier si la clé est dans l'intervalle du bloc courant
+        /// Vï¿½rifier si la clï¿½ est dans l'intervalle du bloc courant
         if (numero_inscription >= buf.etudiants[0].numero_inscription &&
             numero_inscription <= buf.etudiants[buf.nb_enregistrements - 1].numero_inscription) {
             /// Recherche interne (dans le bloc)
-            int inf = 0; /// Borne inférieure dans le bloc
-            int sup = buf.nb_enregistrements - 1; /// Borne supérieure dans le bloc
+            int inf = 0; /// Borne infï¿½rieure dans le bloc
+            int sup = buf.nb_enregistrements - 1; /// Borne supï¿½rieure dans le bloc
             while (inf <= sup && !(*Trouv)) {
                 *j = (inf + sup) / 2; /// Position du milieu dans le bloc
                 if (numero_inscription == buf.etudiants[*j].numero_inscription) {
-                    *Trouv = 1; /// Étudiant trouvé
+                    *Trouv = 1; /// ï¿½tudiant trouvï¿½
                 } else if (numero_inscription < buf.etudiants[*j].numero_inscription) {
-                    sup = *j - 1; /// Rechercher dans la moitié gauche
+                    sup = *j - 1; /// Rechercher dans la moitiï¿½ gauche
                 } else {
-                    inf = *j + 1; /// Rechercher dans la moitié droite
+                    inf = *j + 1; /// Rechercher dans la moitiï¿½ droite
                 }
             }
 
-            /// Si l'étudiant n'est pas trouvé, déterminer où il devrait se trouver
+            /// Si l'ï¿½tudiant n'est pas trouvï¿½, dï¿½terminer oï¿½ il devrait se trouver
             if (!(*Trouv)) {
-                *j = inf; /// Position où l'étudiant devrait être inséré
+                *j = inf; /// Position oï¿½ l'ï¿½tudiant devrait ï¿½tre insï¿½rï¿½
             }
-            stop = 1; /// Arrêter la recherche externe
+            stop = 1; /// Arrï¿½ter la recherche externe
         } else if (numero_inscription < buf.etudiants[0].numero_inscription) {
-            bs = *i - 1; /// Rechercher dans la moitié gauche des blocs
+            bs = *i - 1; /// Rechercher dans la moitiï¿½ gauche des blocs
         } else {
-            bi = *i + 1; /// Rechercher dans la moitié droite des blocs
+            bi = *i + 1; /// Rechercher dans la moitiï¿½ droite des blocs
         }
     }
 
-    /// Si la recherche externe termine sans trouver l'étudiant
+    /// Si la recherche externe termine sans trouver l'ï¿½tudiant
     if (bi > bs) {
-        *i = bi; /// Bloc où l'étudiant devrait être inséré
+        *i = bi; /// Bloc oï¿½ l'ï¿½tudiant devrait ï¿½tre insï¿½rï¿½
         *j = 1;  /// Position dans le bloc
     }
 
     fclose(fichier);
     return 0;
 }
-int suppression_logique(const char *fichier_bin, int numero_inscription) {
+int suppression_logique( int numero_inscription) {
     int Trouv, i, j;
-
-    /// Rechercher l'étudiant à supprimer
-    recherche_dichotomique(fichier_bin, numero_inscription, &Trouv, &i, &j);
+    const char *fichier_bin = "etudiants.bin";
+    /// Rechercher l'ï¿½tudiant ï¿½ supprimer
+    recherche_dichotomique(numero_inscription, &Trouv, &i, &j);
 
     if (Trouv) {
-        /// Ouvrir le fichier en mode lecture/écriture binaire
+        /// Ouvrir le fichier en mode lecture/ï¿½criture binaire
         FILE *fichier = fopen(fichier_bin, "r+b");
         if (fichier == NULL) {
             printf("Erreur lors de l'ouverture du fichier\n");
             return-1;
         }
 
-        /// Se positionner sur le bloc contenant l'étudiant à supprimer
+        /// Se positionner sur le bloc contenant l'ï¿½tudiant ï¿½ supprimer
         fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
         Bloc buf;
         fread(&buf, sizeof(Bloc), 1, fichier); /// Lire le bloc
 
-        /// Marquer l'étudiant comme supprimé
+        /// Marquer l'ï¿½tudiant comme supprimï¿½
         buf.etudiants[j].indicateur_suppression = 1;
 
-        /// Réécrire le bloc modifié dans le fichier
+        /// Rï¿½ï¿½crire le bloc modifiï¿½ dans le fichier
         fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
         fwrite(&buf, sizeof(Bloc), 1, fichier);
 
         fclose(fichier);
-        printf("L'étudiant avec le numéro d'inscription %d a été marqué comme supprimé.\n", numero_inscription);
+        printf("L'etudiant avec le numero d'inscription %d a ete marque comme supprime.\n", numero_inscription);
     } else {
-        printf("Aucun étudiant trouvé avec le numéro d'inscription %d.\n", numero_inscription);
+        printf("Aucun etudiant trouve avec le numero d'inscription %d.\n", numero_inscription);
     }
     return 0;
 }
@@ -318,47 +325,48 @@ int suppression_logique(const char *fichier_bin, int numero_inscription) {
 
 
 /// Cette fonction nous permet de visualiser le contenue du fichier binaire
-int afficher_contenu_fichier_binaire(const char *nom_fichier) {
-    FILE *fichier = fopen(nom_fichier, "rb"); // Ouverture en mode lecture binaire
+int afficher_contenu_fichier_binaire() {
+    const char *fichier_bin = "etudiants.bin";
+    FILE *fichier = fopen(fichier_bin, "rb"); // Ouverture en mode lecture binaire
     if (fichier == NULL) {
         printf("Erreur lors de l'ouverture du fichier\n");
         return -1;
     }
 
-    // Lire l'entête du fichier
+    // Lire l'entï¿½te du fichier
     Entete entete;
     fread(&entete, sizeof(Entete), 1, fichier);
 
-    // Afficher les informations générales du fichier
-    printf("Nombre total d'étudiants: %d\n", entete.compteur_inserts);
-    printf("Nombre de blocs utilisés: %d\n", entete.nb_blocs_utilises);
+    // Afficher les informations gï¿½nï¿½rales du fichier
+    printf("Nombre total d'etudiants: %d\n", entete.compteur_inserts);
+    printf("Nombre de blocs utilises: %d\n", entete.nb_blocs_utilises);
     printf("\n");
 
-    Bloc bloc; // Pour stocker un bloc d'étudiants
+    Bloc bloc; // Pour stocker un bloc d'ï¿½tudiants
 
     // Parcourir tous les blocs du fichier
     for (int i = 0; i < entete.nb_blocs_utilises; i++) {
         fread(&bloc, sizeof(Bloc), 1, fichier);
 
-        // Parcourir tous les étudiants dans le bloc courant
+        // Parcourir tous les ï¿½tudiants dans le bloc courant
         for (int j = 0; j < bloc.nb_enregistrements; j++) {
             Etudiant etudiant = bloc.etudiants[j];
 
-            // Afficher les informations de l'étudiant en colonnes
+            // Afficher les informations de l'ï¿½tudiant en colonnes
             printf("+---------------------+---------------------+\n");
-            printf("| %-20s | %-20s |\n", "Numéro d'inscription", "Nom");
+            printf("| %-20s | %-20s |\n", "Numero d'inscription", "Nom");
             printf("+---------------------+---------------------+\n");
             printf("| %-20d | %-20s |\n", etudiant.numero_inscription, etudiant.nom);
             printf("+---------------------+---------------------+\n");
-            printf("| %-20s | %-20s |\n", "Prénom", "Année de naissance");
+            printf("| %-20s | %-20s |\n", "Prenom", "Annee de naissance");
             printf("+---------------------+---------------------+\n");
             printf("| %-20s | %-20d |\n", etudiant.prenom, etudiant.annee_naissance);
             printf("+---------------------+---------------------+\n");
-            printf("| %-20s | %-20s |\n", "Groupe", "Moyenne pondérée");
+            printf("| %-20s | %-20s |\n", "Groupe", "Moyenne ponderee");
             printf("+---------------------+---------------------+\n");
             printf("| %-20s | %-20.2f |\n", etudiant.groupe, etudiant.moyenne_ponderee);
             printf("+---------------------+---------------------+\n");
-            printf("| %-20s | %-20s |\n", "Indicateur suppression", etudiant.indicateur_suppression ? "Supprimé" : "Actif");
+            printf("| %-20s | %-20s |\n", "Indicateur suppression", etudiant.indicateur_suppression ? "Supprime" : "Actif");
             printf("+---------------------+---------------------+\n");
 
             // Afficher les notes et coefficients
@@ -368,7 +376,7 @@ int afficher_contenu_fichier_binaire(const char *nom_fichier) {
                 printf("| %-20d | %-5.2f (%-2d)          |\n", k + 1, etudiant.notes[k], etudiant.coefficients[k]);
             }
             printf("+---------------------+---------------------+\n");
-            printf("\n"); // Espace entre les étudiants
+            printf("\n"); // Espace entre les ï¿½tudiants
         }
     }
 
@@ -376,9 +384,10 @@ int afficher_contenu_fichier_binaire(const char *nom_fichier) {
     return 0;
 }
 
-int modifier_etudiant(const char *fichier_bin, int numero_inscription) {
+int modifier_etudiant( int numero_inscription) {
+    const char *fichier_bin = "etudiants.bin";
     int Trouv, i, j;
-    recherche_dichotomique(fichier_bin, numero_inscription, &Trouv, &i, &j);
+    recherche_dichotomique( numero_inscription, &Trouv, &i, &j);
 
     if (Trouv) {
         FILE *fichier = fopen(fichier_bin, "r+b");
@@ -387,44 +396,46 @@ int modifier_etudiant(const char *fichier_bin, int numero_inscription) {
             return -1;
         }
 
-        /// Se positionner sur le bloc contenant l'étudiant
+        // Se positionner sur le bloc contenant l'Ã©tudiant
         fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
         Bloc buf;
         fread(&buf, sizeof(Bloc), 1, fichier);
 
         Etudiant *etudiant = &buf.etudiants[j];
-        int continuer = 1; /// Indicateur pour continuer ou non la modification
+        int continuer = 1; // Indicateur pour continuer ou non la modification
 
         while (continuer) {
-            /// Afficher les informations actuelles de l'étudiant
-            printf("\nInformations actuelles de l'étudiant :\n");
+            // Afficher les informations actuelles de l'Ã©tudiant
+            printf("\nInformations actuelles de l'etudiant :\n");
             printf("1. Nom : %s\n", etudiant->nom);
-            printf("2. Prénom : %s\n", etudiant->prenom);
-            printf("3. Année de naissance : %d\n", etudiant->annee_naissance);
+            printf("2. Prenom : %s\n", etudiant->prenom);
+            printf("3. Annee de naissance : %d\n", etudiant->annee_naissance);
             printf("4. Groupe : %s\n", etudiant->groupe);
             printf("5. Notes et coefficients :\n");
-            for (int k = 0; k < 4; k++) {
-                printf("   Module %d : Note = %.2f, Coefficient = %d\n", k + 1, etudiant->notes[k], etudiant->coefficients[k]);
-            }
+            printf("   Module SFSD : Note = %.2f, Coefficient = %d\n", etudiant->notes[0], etudiant->coefficients[0]);
+            printf("   Module POO : Note = %.2f, Coefficient = %d\n", etudiant->notes[1], etudiant->coefficients[1]);
+            printf("   Module Analyse : Note = %.2f, Coefficient = %d\n", etudiant->notes[2], etudiant->coefficients[2]);
+            printf("   Module Algebre Lineaire : Note = %.2f, Coefficient = %d\n", etudiant->notes[3], etudiant->coefficients[3]);
             printf("6. Quitter\n");
+            printf("La moyenne pondÃ©rÃ© : %.2f \n ",etudiant->moyenne_ponderee);
 
-            /// Demander à l'utilisateur quel champ modifier
+            // Demander Ã  l'utilisateur quel champ modifier
             int choix;
-            printf("\nEntrez le numéro du champ à modifier (1-6) : ");
+            printf("\nEntrez le numero du champ a modifier (1-6) : ");
             scanf("%d", &choix);
 
-            /// Modifier le champ sélectionné
+            // Modifier le champ sÃ©lectionnÃ©
             switch (choix) {
                 case 1:
                     printf("Nouveau nom : ");
                     scanf("%s", etudiant->nom);
                     break;
                 case 2:
-                    printf("Nouveau prénom : ");
+                    printf("Nouveau prenom : ");
                     scanf("%s", etudiant->prenom);
                     break;
                 case 3:
-                    printf("Nouvelle année de naissance : ");
+                    printf("Nouvelle annee de naissance : ");
                     scanf("%d", &etudiant->annee_naissance);
                     break;
                 case 4:
@@ -432,146 +443,207 @@ int modifier_etudiant(const char *fichier_bin, int numero_inscription) {
                     scanf("%s", etudiant->groupe);
                     break;
                 case 5:
-                    printf("Nouvelles notes et coefficients :\n");
-                    for (int k = 0; k < 4; k++) {
-                        printf("Module %d :\n", k + 1);
-                        printf("   Nouvelle note : ");
-                        scanf("%f", &etudiant->notes[k]);
-                        printf("   Nouveau coefficient : ");
-                        scanf("%d", &etudiant->coefficients[k]);
+                    printf("Modifier les notes des modules :\n");
+                    int contin = 1; // Variable pour gÃ©rer la boucle
+                    while (contin) {
+                        printf("Modules disponibles :\n");
+                        printf("  1 Module SFSD : Note = %.2f, Coefficient = %d\n", etudiant->notes[0], etudiant->coefficients[0]);
+                        printf("  2 Module POO : Note = %.2f, Coefficient = %d\n", etudiant->notes[1], etudiant->coefficients[1]);
+                        printf("  3 Module Analyse : Note = %.2f, Coefficient = %d\n", etudiant->notes[2], etudiant->coefficients[2]);
+                        printf("  4 Module Algebre Lineaire : Note = %.2f, Coefficient = %d\n", etudiant->notes[3], etudiant->coefficients[3]);
+                        printf("5. Quitter la modification des notes\n");
+                        printf("Choisissez un module Ã  modifier (1-5) : ");
+
+                        int choix_module;
+                        scanf("%d", &choix_module);
+
+                        if (choix_module >= 1 && choix_module <= 4) {
+                            printf("   Nouvelle note pour le Module %d : \n", choix_module);
+                            float nouvelle_note;
+                            do {
+                                printf("La note doit Ãªtre entre 0 et 20.\n");
+                                scanf("%f", &nouvelle_note);
+                            } while (nouvelle_note < 0 || nouvelle_note > 20);
+                            etudiant->notes[choix_module - 1] = nouvelle_note;
+                            printf("Note mise Ã  jour pour le Module %d.\n", choix_module);
+                        } else if (choix_module == 5) {
+                            contin = 0; // Quitter la modification
+                        } else {
+                            printf("Choix invalide. Veuillez rÃ©essayer.\n");
+                        }
                     }
-                    /// Recalculer la moyenne pondérée
+
+                    // Recalculer la moyenne pondÃ©rÃ©e
                     float somme_notes_ponderees = 0;
-                    int somme_coefficients = 0;
                     for (int k = 0; k < 4; k++) {
                         somme_notes_ponderees += etudiant->notes[k] * etudiant->coefficients[k];
-                        somme_coefficients += etudiant->coefficients[k];
                     }
-                    etudiant->moyenne_ponderee = somme_notes_ponderees / somme_coefficients;
+                    etudiant->moyenne_ponderee = somme_notes_ponderees / 14;
+                    printf("Moyenne pondÃ©rÃ©e mise Ã  jour : %.2f\n", etudiant->moyenne_ponderee);
                     break;
+
                 case 6:
-                    continuer = 0; /// Quitter la boucle
+                    continuer = 0; // Quitter la boucle
                     break;
                 default:
-                    printf("Choix invalide. Veuillez réessayer.\n");
+                    printf("Choix invalide. Veuillez rÃ©essayer.\n");
                     break;
             }
 
-            /// Réécrire le bloc modifié dans le fichier après chaque modification
+            // RÃ©Ã©crire le bloc modifiÃ© dans le fichier aprÃ¨s chaque modification
             fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
             fwrite(&buf, sizeof(Bloc), 1, fichier);
         }
 
         fclose(fichier);
-        printf("\nLes modifications ont été enregistrées.\n");
+        printf("\nLes modifications ont ete enregistrees.\n");
     } else {
-        printf("Aucun étudiant trouvé avec le numéro d'inscription %d.\n", numero_inscription);
+        printf("Aucun etudiant trouve avec le numero d'inscription %d.\n", numero_inscription);
     }
     return 0;
 }
 
 int ajouter_etudiant(const char *fichier_bin) {
-    Etudiant nouvel_etudiant; // Structure pour stocker les informations du nouvel étudiant
+    Etudiant nouvel_etudiant; // Structure pour stocker les informations du nouvel ï¿½tudiant
     int Trouv, i, j; // Variables pour la recherche dichotomique
 
-    /// Étape 1 : Saisie du numéro d'inscription
-    printf("Ajout d'un nouvel étudiant :\n");
-    printf("Numéro d'inscription : ");
-    if (scanf("%d", &nouvel_etudiant.numero_inscription) != 1) {
-        printf("Erreur: Numéro d'inscription invalide.\n");
+    /// ï¿½tape 1 : Saisie du numï¿½ro d'inscription
+    printf("Ajout d'un nouvel ï¿½tudiant :\n");
+    printf("Numï¿½ro d'inscription : ");
+    if (scanf("%d", &nouvel_etudiant.numero_inscription) != 0) {
+        printf("Erreur: Numï¿½ro d'inscription invalide.\n");
         return -1;
     }
 
-    /// Étape 2 : Vérifier si l'étudiant existe déjà
-    if (recherche_dichotomique(fichier_bin, nouvel_etudiant.numero_inscription, &Trouv, &i, &j) != 0) {
-        printf("Erreur lors de la recherche de l'étudiant.\n");
+    /// ï¿½tape 2 : Vï¿½rifier si l'ï¿½tudiant existe dï¿½jï¿½
+    if (recherche_dichotomique( nouvel_etudiant.numero_inscription, &Trouv, &i, &j) != 0) {
+        printf("Erreur lors de la recherche de l'ï¿½tudiant.\n");
         return -1;
     }
 
-    if (Trouv) {
-        // Si l'étudiant existe déjà, afficher un message d'erreur et arrêter la fonction
-        printf("Un étudiant avec ce numéro d'inscription existe déjà.\n");
-        return -1;
-    }
+    // if (Trouv) {
+    //     // Si l'ï¿½tudiant existe dï¿½jï¿½, afficher un message d'erreur et arrï¿½ter la fonction
+    //     printf("Un ï¿½tudiant avec ce numï¿½ro d'inscription existe dï¿½jï¿½.\n");
+    //     return -1;
+    // }
 
-    /// Étape 3 : Saisie des autres informations de l'étudiant
+    /// ï¿½tape 3 : Saisie des autres informations de l'ï¿½tudiant
     printf("Nom : ");
     if (scanf("%49s", nouvel_etudiant.nom) != 1) {
         printf("Erreur: Nom invalide.\n");
         return -1;
     }
 
-    printf("Prénom : ");
+    printf("Prenom : ");
     if (scanf("%49s", nouvel_etudiant.prenom) != 1) {
-        printf("Erreur: Prénom invalide.\n");
+        printf("Erreur: Prenom invalide.\n");
         return -1;
     }
 
-    printf("Année de naissance : ");
-    if (scanf("%d", &nouvel_etudiant.annee_naissance) != 1) {
-        printf("Erreur: Année de naissance invalide.\n");
-        return -1;
+    printf("Annee de naissance : ");
+          do {
+        printf("Veuillez entrer votre annÃ©e de naissance (entre 1990 et 2020) : ");
+        scanf("%d", &nouvel_etudiant.annee_naissance);
+
+        // VÃ©rification de la validitÃ© de l'annÃ©e
+        if (nouvel_etudiant.annee_naissance < 1990 || nouvel_etudiant.annee_naissance > 2020) {
+            printf("AnnÃ©e invalide. Veuillez rÃ©essayer.\n");
+        }
+    } while (nouvel_etudiant.annee_naissance < 1990 || nouvel_etudiant.annee_naissance > 2020); // RÃ©pÃ©ter tant que l'annÃ©e est invalide
+
+        int saisie_valide = 0;
+     do {
+        printf("Groupe : ");
+        if (scanf("%9s", nouvel_etudiant.groupe) == 1) {
+            // VÃ©rifier si le groupe est valide (par exemple, non vide et conforme Ã  un format)
+            if (strlen(nouvel_etudiant.groupe) > 0) {
+                saisie_valide = 1; // La saisie est valide
+            } else {
+                printf("Erreur : Le groupe ne peut pas Ãªtre vide.\n");
+            }
+        } else {
+            // Gestion des erreurs de saisie (par exemple, entrÃ©e non valide)
+            printf("Erreur : Saisie invalide. Veuillez rÃ©essayer.\n");
+            while (getchar() != '\n'); // Nettoyer le buffer d'entrÃ©e
+        }
+    } while (!saisie_valide); // RÃ©pÃ©ter tant que la saisie n'est pas valide
+
+
+    // VÃ©rifier si le groupe fait partie des groupes disponibles
+    const char *groupes_disponibles[] = {"1A", "1B", "1C", "2A", "2B", "2C", "3A", "3B", "3C"};
+    int groupe_valide = 0;
+    while (!groupe_valide) {
+        for (int k = 0; k < 9; k++) {
+            if (strcmp(nouvel_etudiant.groupe, groupes_disponibles[k]) == 0) {
+                groupe_valide = 1;
+                break;
+            }
+        }
+        if (!groupe_valide) {
+            printf("Erreur: Groupe invalide. Les groupes disponibles sont : 1A, 1B, 1C, 2A, 2B, 2C, 3A, 3B, 3C.\n");
+            printf("Veuillez entrer un groupe valide : ");
+            scanf("%9s", nouvel_etudiant.groupe);
+        }
     }
 
-    printf("Groupe : ");
-    if (scanf("%9s", nouvel_etudiant.groupe) != 1) {
-        printf("Erreur: Groupe invalide.\n");
-        return -1;
-    }
+ // Saisie des notes pour chaque module (validation entre 0 et 20)
+    printf("Notes :\n");
+    const char *modules[] = {"SFSD", "POO", "Analyse", "AlgÃ¨bre linÃ©aire"};
+    int coefficients_fixes[4] = {4, 3, 2, 5}; // Coefficients fixes pour chaque module
 
-    printf("Notes et coefficients :\n");
     for (int k = 0; k < 4; k++) {
-        printf("Module %d :\n", k + 1);
-        printf("   Note : ");
-        if (scanf("%f", &nouvel_etudiant.notes[k]) != 1 || nouvel_etudiant.notes[k] < 0 || nouvel_etudiant.notes[k] > 20) {
-            printf("Erreur: Note invalide (doit être entre 0 et 20).\n");
-            return -1;
-        }
+        do {
+            printf("Module %s :\n", modules[k]);
+            printf("   Note (entre 0 et 20) : ");
+            scanf("%f", &nouvel_etudiant.notes[k]);
+            if (nouvel_etudiant.notes[k] < 0 || nouvel_etudiant.notes[k] > 20) {
+                printf("Erreur : La note doit Ãªtre comprise entre 0 et 20. Veuillez rÃ©essayer.\n");
+            }
+        } while (nouvel_etudiant.notes[k] < 0 || nouvel_etudiant.notes[k] > 20);
 
-        printf("   Coefficient : ");
-        if (scanf("%d", &nouvel_etudiant.coefficients[k]) != 1 || nouvel_etudiant.coefficients[k] <= 0) {
-            printf("Erreur: Coefficient invalide (doit être un entier positif).\n");
-            return -1;
-        }
+        // Assignation des coefficients fixes
+        nouvel_etudiant.coefficients[k] = coefficients_fixes[k];
     }
 
-    /// Étape 4 : Calcul de la moyenne pondérée
-    float somme_notes_ponderees = 0; // Somme des notes pondérées
+
+
+    /// ï¿½tape 4 : Calcul de la moyenne pondï¿½rï¿½e
+    float somme_notes_ponderees = 0; // Somme des notes pondï¿½rï¿½es
     int somme_coefficients = 0; // Somme des coefficients
     for (int k = 0; k < 4; k++) {
         somme_notes_ponderees += nouvel_etudiant.notes[k] * nouvel_etudiant.coefficients[k];
         somme_coefficients += nouvel_etudiant.coefficients[k];
     }
-    // Calcul de la moyenne pondérée
+    // Calcul de la moyenne pondï¿½rï¿½e
     nouvel_etudiant.moyenne_ponderee = somme_notes_ponderees / somme_coefficients;
 
-    // Positionner l'indice de suppression à 0
+    // Positionner l'indice de suppression ï¿½ 0
     nouvel_etudiant.indicateur_suppression = 0;
 
-    /// Étape 5 : Recherche de la position d'insertion
-    if (recherche_dichotomique(fichier_bin, nouvel_etudiant.numero_inscription, &Trouv, &i, &j) != 0) {
+    /// ï¿½tape 5 : Recherche de la position d'insertion
+    if (recherche_dichotomique( nouvel_etudiant.numero_inscription, &Trouv, &i, &j) != 0) {
         printf("Erreur lors de la recherche de la position d'insertion.\n");
         return -1;
     }
 
     if (!Trouv) {
-        // Ouvrir le fichier en mode lecture/écriture binaire
+        // Ouvrir le fichier en mode lecture/ï¿½criture binaire
         FILE *fichier = fopen(fichier_bin, "r+b");
         if (fichier == NULL) {
             printf("Erreur lors de l'ouverture du fichier.\n");
             return -1;
         }
 
-        // Lire l'entête du fichier
+        // Lire l'entï¿½te du fichier
         FichierTOF F;
         F.fichier = fichier;
         lire_entete(&F);
 
-        Bloc buf; // Buffer pour stocker un bloc d'étudiants
-        Etudiant x; // Variable temporaire pour stocker un étudiant lors des décalages
-        int continu = 1; // Indicateur pour continuer ou non les décalages
+        Bloc buf; // Buffer pour stocker un bloc d'ï¿½tudiants
+        Etudiant x; // Variable temporaire pour stocker un ï¿½tudiant lors des dï¿½calages
+        int continu = 1; // Indicateur pour continuer ou non les dï¿½calages
 
-        /// Étape 6 : Décalage des enregistrements et insertion
+        /// ï¿½tape 6 : Dï¿½calage des enregistrements et insertion
         while (continu && i <= F.entete.nb_blocs_utilises) {
             // Lire le bloc courant
             fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
@@ -584,59 +656,59 @@ int ajouter_etudiant(const char *fichier_bin) {
             // Sauvegarder le dernier enregistrement du bloc courant
             x = buf.etudiants[buf.nb_enregistrements - 1];
 
-            // Décaler les enregistrements vers le bas pour faire de la place
+            // Dï¿½caler les enregistrements vers le bas pour faire de la place
             for (int k = buf.nb_enregistrements; k > j; k--) {
                 buf.etudiants[k] = buf.etudiants[k - 1];
             }
 
-            // Insérer le nouvel étudiant à la position j
+            // Insï¿½rer le nouvel ï¿½tudiant ï¿½ la position j
             buf.etudiants[j] = nouvel_etudiant;
 
-            // Si le bloc n'est pas plein, insérer x à la fin et arrêter
+            // Si le bloc n'est pas plein, insï¿½rer x ï¿½ la fin et arrï¿½ter
             if (buf.nb_enregistrements < MAX_ENREGISTREMENTS) {
                 buf.nb_enregistrements++; // Augmenter le nombre d'enregistrements dans le bloc
-                buf.etudiants[buf.nb_enregistrements - 1] = x; // Insérer x à la fin
+                buf.etudiants[buf.nb_enregistrements - 1] = x; // Insï¿½rer x ï¿½ la fin
                 fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
                 if (fwrite(&buf, sizeof(Bloc), 1, fichier) != 1) {
-                    printf("Erreur lors de l'écriture du bloc.\n");
+                    printf("Erreur lors de l'ecriture du bloc.\n");
                     fclose(fichier);
                     return -1;
                 }
-                continu = 0; // Arrêter la boucle
+                continu = 0; // Arrï¿½ter la boucle
             } else {
-                // Si le bloc est plein, écrire le bloc et passer au suivant
+                // Si le bloc est plein, ï¿½crire le bloc et passer au suivant
                 fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
                 if (fwrite(&buf, sizeof(Bloc), 1, fichier) != 1) {
-                    printf("Erreur lors de l'écriture du bloc.\n");
+                    printf("Erreur lors de l'ecriture du bloc.\n");
                     fclose(fichier);
                     return -1;
                 }
                 i++; // Passer au bloc suivant
                 j = 0; // Position d'insertion dans le nouveau bloc
-                nouvel_etudiant = x; // x devient le nouvel étudiant à insérer
+                nouvel_etudiant = x; // x devient le nouvel ï¿½tudiant ï¿½ insï¿½rer
             }
         }
 
-        /// Étape 7 : Si on dépasse la fin du fichier, ajouter un nouveau bloc
+        /// ï¿½tape 7 : Si on dï¿½passe la fin du fichier, ajouter un nouveau bloc
         if (i > F.entete.nb_blocs_utilises) {
-            buf.etudiants[0] = nouvel_etudiant; // Insérer l'étudiant dans le nouveau bloc
+            buf.etudiants[0] = nouvel_etudiant; // Insï¿½rer l'ï¿½tudiant dans le nouveau bloc
             buf.nb_enregistrements = 1; // Le nouveau bloc contient un seul enregistrement
             fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
             if (fwrite(&buf, sizeof(Bloc), 1, fichier) != 1) {
-                printf("Erreur lors de l'écriture du nouveau bloc.\n");
+                printf("Erreur lors de l'ecriture du nouveau bloc.\n");
                 fclose(fichier);
                 return -1;
             }
-            F.entete.nb_blocs_utilises++; // Mettre à jour le nombre de blocs utilisés
+            F.entete.nb_blocs_utilises++; // Mettre ï¿½ jour le nombre de blocs utilisï¿½s
         }
 
-        /// Étape 8 : Mettre à jour l'entête du fichier
-        F.entete.compteur_inserts++; // Incrémenter le compteur d'insertions
-        mettre_a_jour_entete(&F); // Réécrire l'entête dans le fichier
+        /// ï¿½tape 8 : Mettre ï¿½ jour l'entï¿½te du fichier
+        F.entete.compteur_inserts++; // Incrï¿½menter le compteur d'insertions
+        mettre_a_jour_entete(&F); // Rï¿½ï¿½crire l'entï¿½te dans le fichier
 
         // Fermer le fichier
         fclose(fichier);
-        printf("L'étudiant a été ajouté avec succès.\n");
+        printf("L'etudiant a ete ajoute avec succes.\n");
     }
 
     return 0;
@@ -651,7 +723,7 @@ int fichier_existe(const char *nom_fichier) {
     return 0; // Le fichier n'existe pas
 }
 
-// Fonction pour vérifier si un taux de chargement est valide (entre 0 et 1)
+// Fonction pour vï¿½rifier si un taux de chargement est valide (entre 0 et 1)
 int taux_chargement_valide(float taux) {
     return (taux >= 0.0 && taux <= 1.0);
 }
@@ -663,25 +735,25 @@ void extractByClass(const char *fichier_bin, const char *class_name) {
         return;
     }
 
-    // Lire l'entête du fichier
+    // Lire l'entï¿½te du fichier
     Entete entete;
     fread(&entete, sizeof(Entete), 1, fichier);
 
     Bloc bloc;
-    Etudiant filtered[MAX_ENREGISTREMENTS * entete.nb_blocs_utilises]; // Tableau pour stocker les étudiants filtrés
-    int filtered_count = 0; // Compteur pour les étudiants filtrés
+    Etudiant filtered[MAX_ENREGISTREMENTS * entete.nb_blocs_utilises]; // Tableau pour stocker les ï¿½tudiants filtrï¿½s
+    int filtered_count = 0; // Compteur pour les ï¿½tudiants filtrï¿½s
 
     // Parcourir tous les blocs du fichier
     for (int i = 0; i < entete.nb_blocs_utilises; i++) {
         fread(&bloc, sizeof(Bloc), 1, fichier);
         for (int j = 0; j < bloc.nb_enregistrements; j++) {
             Etudiant etudiant = bloc.etudiants[j];
-            // Vérifier si l'étudiant appartient à la classe spécifiée et n'est pas supprimé
+            // Vï¿½rifier si l'ï¿½tudiant appartient ï¿½ la classe spï¿½cifiï¿½e et n'est pas supprimï¿½
             if (strcmp(etudiant.groupe, class_name) == 0 && etudiant.indicateur_suppression == 0) {
                 if (filtered_count < MAX_ENREGISTREMENTS * entete.nb_blocs_utilises) {
                     filtered[filtered_count++] = etudiant;
                 } else {
-                    printf("Attention: Trop d'étudiants à filtrer. Certains ont été ignorés.\n");
+                    printf("Attention: Trop d'etudiants a filtrer. Certains ont ete ignores.\n");
                 }
             }
         }
@@ -689,11 +761,11 @@ void extractByClass(const char *fichier_bin, const char *class_name) {
     fclose(fichier);
 
     if (filtered_count == 0) {
-        printf("Aucun étudiant trouvé pour la classe %s.\n", class_name);
+        printf("Aucun etudiant trouve pour la classe %s.\n", class_name);
         return;
     }
 
-    // Trier les étudiants par moyenne pondérée (ordre décroissant)
+    // Trier les ï¿½tudiants par moyenne pondï¿½rï¿½e (ordre dï¿½croissant)
     for (int i = 0; i < filtered_count - 1; i++) {
         for (int j = 0; j < filtered_count - i - 1; j++) {
             if (filtered[j].moyenne_ponderee < filtered[j + 1].moyenne_ponderee) {
@@ -704,10 +776,10 @@ void extractByClass(const char *fichier_bin, const char *class_name) {
         }
     }
 
-    // Afficher les étudiants filtrés et triés
-    printf("\nÉtudiants de la classe %s triés par moyenne pondérée (décroissant) :\n", class_name);
+    // Afficher les etudiants filtres et tries
+    printf("\netudiants de la classe %s tries par moyenne ponderee (decroissant) :\n", class_name);
     printf("=================================================================\n");
-    printf("| %-5s | %-15s | %-15s | %-7s |\n", "ID", "Nom", "Prénom", "Moyenne");
+    printf("| %-5s | %-15s | %-15s | %-7s |\n", "ID", "Nom", "Prenom", "Moyenne");
     printf("=================================================================\n");
 
     for (int i = 0; i < filtered_count; i++) {
@@ -726,27 +798,27 @@ int main() {
     char fichier_txt[100], fichier_bin[100];
     float taux_chargement;
     int numero_inscription;
-    char class_name[10]; // Pour stocker le nom de la classe à extraire
+    char class_name[10]; // Pour stocker le nom de la classe a extraire
 
-    printf("Bienvenue dans le gestionnaire d'étudiants!\n");
+    printf("Bienvenue dans le gestionnaire d etudiants!\n");
 
     while (1) {
         printf("\nMenu:\n");
-        printf("1. Chargement initial des données\n");
-        printf("2. Réorganisation du fichier binaire\n");
-        printf("3. Suppression logique d'un étudiant\n");
+        printf("1. Chargement initial des donnees\n");
+        printf("2. Reorganisation du fichier binaire\n");
+        printf("3. Suppression logique d un etudiant\n");
         printf("4. Afficher le contenu du fichier binaire\n");
-        printf("5. Modifier les informations d'un étudiant\n");
-        printf("6. Ajouter un nouvel étudiant\n");
-        printf("7. Rechercher un étudiant\n");
-        printf("8. Extraire les étudiants par classe\n");
+        printf("5. Modifier les informations d un etudiant\n");
+        printf("6. Ajouter un nouvel etudiant\n");
+        printf("7. Rechercher un etudiant\n");
+        printf("8. Extraire les etudiants par classe\n");
         printf("9. Quitter\n");
         printf("Entrez votre choix: ");
         scanf("%d", &choix);
 
         switch (choix) {
             case 1: {
-                // Chargement initial des données
+                // Chargement initial des donnï¿½es
                 printf("Entrez le nom du fichier texte: ");
                 scanf("%s", fichier_txt);
                 printf("Entrez le nom du fichier binaire: ");
@@ -754,19 +826,19 @@ int main() {
                 printf("Entrez le taux de chargement (entre 0 et 1): ");
                 scanf("%f", &taux_chargement);
 
-                // Vérifications
+                // Vï¿½rifications
                 if (!fichier_existe(fichier_txt)) {
                     printf("Erreur: Le fichier texte '%s' n'existe pas.\n", fichier_txt);
                     break;
                 }
                 if (!taux_chargement_valide(taux_chargement)) {
-                    printf("Erreur: Le taux de chargement doit être compris entre 0 et 1.\n");
+                    printf("Erreur: Le taux de chargement doit etre compris entre 0 et 1.\n");
                     break;
                 }
 
                 // Appel de la fonction de chargement initial
                 if (chargement_initial(fichier_txt, fichier_bin, taux_chargement) == 0) {
-                    printf("Chargement initial réussi!\n");
+                    printf("Chargement initial reussi!\n");
                 } else {
                     printf("Erreur lors du chargement initial.\n");
                 }
@@ -774,47 +846,45 @@ int main() {
             }
 
             case 2: {
-                // Réorganisation du fichier binaire
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
+                // Reorganisation du fichier binaire
+              
                 printf("Entrez le taux de chargement (entre 0 et 1): ");
                 scanf("%f", &taux_chargement);
 
-                // Vérifications
+                // Verifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
                 }
                 if (!taux_chargement_valide(taux_chargement)) {
-                    printf("Erreur: Le taux de chargement doit être compris entre 0 et 1.\n");
+                    printf("Erreur: Le taux de chargement doit etre compris entre 0 et 1.\n");
                     break;
                 }
 
-                // Appel de la fonction de réorganisation
+                // Appel de la fonction de reorganisation
                 if (Reorganisation(fichier_bin, taux_chargement) == 0) {
-                    printf("Réorganisation réussie!\n");
+                    printf("Rï¿½organisation reussie!\n");
                 } else {
-                    printf("Erreur lors de la réorganisation.\n");
+                    printf("Erreur lors de la reorganisation.\n");
                 }
                 break;
             }
 
             case 3: {
-                // Suppression logique d'un étudiant
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
-                printf("Entrez le numéro d'inscription de l'étudiant à supprimer: ");
+                // Suppression logique d'un etudiant
+             
+                printf("Entrez le numï¿½ro d'inscription de l'etudiant a supprimer: ");
                 scanf("%d", &numero_inscription);
 
-                // Vérifications
+                // Vï¿½rifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
                 }
 
                 // Appel de la fonction de suppression logique
-                if (suppression_logique(fichier_bin, numero_inscription) == 0) {
-                    printf("Suppression logique réussie!\n");
+                if (suppression_logique(numero_inscription) == 0) {
+                    printf("Suppression logique reussie!\n");
                 } else {
                     printf("Erreur lors de la suppression logique.\n");
                 }
@@ -823,10 +893,9 @@ int main() {
 
             case 4: {
                 // Afficher le contenu du fichier binaire
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
+           
 
-                // Vérifications
+                // Verifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
@@ -834,7 +903,7 @@ int main() {
 
                 // Appel de la fonction d'affichage
                 if (afficher_contenu_fichier_binaire(fichier_bin) == 0) {
-                    printf("Affichage réussi!\n");
+                    printf("Affichage reussi!\n");
                 } else {
                     printf("Erreur lors de l'affichage du contenu.\n");
                 }
@@ -842,21 +911,20 @@ int main() {
             }
 
             case 5: {
-                // Modifier les informations d'un étudiant
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
-                printf("Entrez le numéro d'inscription de l'étudiant à modifier: ");
+                // Modifier les informations d'un etudiant
+         
+                printf("Entrez le numero d'inscription de l'etudiant a modifier: ");
                 scanf("%d", &numero_inscription);
 
-                // Vérifications
+                // Verifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
                 }
 
                 // Appel de la fonction de modification
-                if (modifier_etudiant(fichier_bin, numero_inscription) == 0) {
-                    printf("Modification réussie!\n");
+                if (modifier_etudiant( numero_inscription) == 0) {
+                    printf("Modification reussie!\n");
                 } else {
                     printf("Erreur lors de la modification.\n");
                 }
@@ -864,11 +932,10 @@ int main() {
             }
 
             case 6: {
-                // Ajouter un nouvel étudiant
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
+                // Ajouter un nouvel etudiant
+         
 
-                // Vérifications
+                // Vï¿½rifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
@@ -876,7 +943,7 @@ int main() {
 
                 // Appel de la fonction d'ajout
                 if (ajouter_etudiant(fichier_bin) == 0) {
-                    printf("Ajout réussi!\n");
+                    printf("Ajout reussi!\n");
                 } else {
                     printf("Erreur lors de l'ajout.\n");
                 }
@@ -884,51 +951,50 @@ int main() {
             }
 
             case 7: {
-                // Rechercher un étudiant
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
-                printf("Entrez le numéro d'inscription de l'étudiant à rechercher: ");
+                // Rechercher un etudiant
+               
+                printf("Entrez le numero d'inscription de l'etudiant a rechercher: ");
                 scanf("%d", &numero_inscription);
 
-                // Vérifications
+                // Vï¿½rifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
                 }
 
                 int Trouv, i, j;
-                if (recherche_dichotomique(fichier_bin, numero_inscription, &Trouv, &i, &j) == 0) {
+                if (recherche_dichotomique(numero_inscription, &Trouv, &i, &j) == 0) {
                     if (Trouv) {
-                        // Ouvrir le fichier pour lire les informations de l'étudiant trouvé
+                        // Ouvrir le fichier pour lire les informations de l'etudiant trouve
                         FILE *fichier = fopen(fichier_bin, "rb");
                         if (fichier == NULL) {
                             printf("Erreur lors de l'ouverture du fichier.\n");
                             break;
                         }
 
-                        // Se positionner sur le bloc contenant l'étudiant
+                        // Se positionner sur le bloc contenant l'etudiant
                         fseek(fichier, sizeof(Entete) + (i - 1) * sizeof(Bloc), SEEK_SET);
                         Bloc buf;
                         fread(&buf, sizeof(Bloc), 1, fichier);
 
-                        // Afficher les informations de l'étudiant trouvé
+                        // Afficher les informations de l'etudiant trouve
                         Etudiant etudiant = buf.etudiants[j];
-                        printf("\nÉtudiant trouvé :\n");
-                        printf("Numéro d'inscription: %d\n", etudiant.numero_inscription);
+                        printf("\netudiant trouve :\n");
+                        printf("Numero d'inscription: %d\n", etudiant.numero_inscription);
                         printf("Nom: %s\n", etudiant.nom);
-                        printf("Prénom: %s\n", etudiant.prenom);
-                        printf("Année de naissance: %d\n", etudiant.annee_naissance);
+                        printf("Prenom: %s\n", etudiant.prenom);
+                        printf("Annee de naissance: %d\n", etudiant.annee_naissance);
                         printf("Groupe: %s\n", etudiant.groupe);
                         printf("Notes: \n");
                         for (int k = 0; k < 4; k++) {
                             printf("Module %d: %.2f (Coefficient: %d)\n", k + 1, etudiant.notes[k], etudiant.coefficients[k]);
                         }
-                        printf("Moyenne pondérée: %.2f\n", etudiant.moyenne_ponderee);
+                        printf("Moyenne ponderee: %.2f\n", etudiant.moyenne_ponderee);
                         printf("Indicateur de suppression: %d\n", etudiant.indicateur_suppression);
 
                         fclose(fichier);
                     } else {
-                        printf("Aucun étudiant trouvé avec le numéro d'inscription %d.\n", numero_inscription);
+                        printf("Aucun etudiant trouve avec le numero d'inscription %d.\n", numero_inscription);
                     }
                 } else {
                     printf("Erreur lors de la recherche.\n");
@@ -937,13 +1003,12 @@ int main() {
             }
 
             case 8: {
-                // Extraire les étudiants par classe
-                printf("Entrez le nom du fichier binaire: ");
-                scanf("%s", fichier_bin);
-                printf("Entrez le nom de la classe à extraire (ex: 3A): ");
+                // Extraire les etudiants par classe
+            
+                printf("Entrez le nom de la classe a extraire (ex: 3A): ");
                 scanf("%9s", class_name);
 
-                // Vérifications
+                // Verifications
                 if (!fichier_existe(fichier_bin)) {
                     printf("Erreur: Le fichier binaire '%s' n'existe pas.\n", fichier_bin);
                     break;
@@ -962,7 +1027,7 @@ int main() {
 
             default: {
                 // Choix invalide
-                printf("Choix invalide. Veuillez réessayer.\n");
+                printf("Choix invalide. Veuillez reessayer.\n");
                 break;
             }
         }
